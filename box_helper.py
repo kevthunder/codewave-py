@@ -1,3 +1,7 @@
+import re
+import codewave_core.util as util
+import codewave_core.logger as logger
+
 class BoxHelper():
 	def __init__(self, codewave, options = {}):
 		self.codewave = codewave
@@ -8,7 +12,7 @@ class BoxHelper():
 			'height': 3,
 			'openText': '',
 			'closeText': '',
-			'indent: 0
+			'indent': 0
 		}
 		for key, val in defaults.items():
 			if key in options:
@@ -40,15 +44,15 @@ class BoxHelper():
 		else:
 			return "\n".join([self.line(l) for l in lines]) 
 	def line(self,text = ''):
-		return util.repeatToLength(" ",self.indent) +
-		self.wrapComment(
-				self.deco + 
-				self.padding() + 
-				text + 
-				util.repeatToLength(" ", self.width - len(self.removeIgnoredContent(text))) + 
-				self.padding() + 
-				self.deco
-			)
+		return (util.repeatToLength(" ",self.indent) +
+			self.wrapComment(
+					self.deco + 
+					self.padding() + 
+					text + 
+					util.repeatToLength(" ", self.width - len(self.removeIgnoredContent(text))) + 
+					self.padding() + 
+					self.deco
+			))
 	def removeIgnoredContent(self,text):
 		return self.codewave.removeMarkers(self.codewave.removeCarret(text))
 	def textBounds(self,text):
@@ -69,7 +73,7 @@ class BoxHelper():
 			self.pad = Math.min(len(resStart.group(3)),len(resEnd.group(1)))
 		self.indent = len(resStart.group(1))
 		startPos = resStart.end(2) + self.pad
-		endPos = resStart.start(2) - self.pad
+		endPos = resEnd.start(2) - self.pad
 		self.width = endPos - startPos
 		return self
 	def reformatLines(self,text,options={}):
@@ -83,7 +87,7 @@ class BoxHelper():
 			ecl = util.escapeRegExp(self.codewave.wrapCommentLeft())
 			ecr = util.escapeRegExp(self.codewave.wrapCommentRight())
 			ed = util.escapeRegExp(self.deco)
-			flag = re.M if options['multiline'] else 0
-			re1 = re.compile("^\\s*"+ecl+"(?:"+ed+")*\\s{0,#{self.pad}}",flag)
+			flag = re.M if opt['multiline'] else 0
+			re1 = re.compile("^\\s*"+ecl+"(?:"+ed+")*\\s{0,"+str(self.pad)+"}",flag)
 			re2 = re.compile("\\s*(?:"+ed+")*"+ecr+"\\s*$",flag)
 			return re.sub(re2,'',re.sub(re1,'',text))

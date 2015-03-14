@@ -139,8 +139,8 @@ class Codewave():
 					start, end = end, start
 				if stri == self.editor.textSubstr(start,end):
 					return util.StrPos(
-					   pos-len(stri) if direction < 0 else pos,
-					   stri
+						 pos-len(stri) if direction < 0 else pos,
+						 stri
 					)
 			pos += direction
 	def findMatchingPair(self,startPos,opening,closing,direction = 1):
@@ -208,7 +208,7 @@ class Codewave():
 		return found
 	def getFinder(self,cmdName,nameSpaces = []):
 		return cmd_finder.CmdFinder(cmdName,
-            namespaces = util.union(self.getNameSpaces(), nameSpaces),
+						namespaces = util.union(self.getNameSpaces(), nameSpaces),
 			useDetectors = self.isRoot(),
 			codewave = self
 		)
@@ -251,11 +251,11 @@ class Codewave():
 		txt = txt.replace(self.carretChar+self.carretChar, ' ')
 		if self.carretChar in txt :
 			return txt.index(self.carretChar)
-  
-  def regMarker(self,flags=0):
-    return re.compile(util.escapeRegExp(self.marker), flags)
-  def removeMarkers(self,text):
-    return text.replace(self.marker,'')
+	
+	def regMarker(self,flags=0):
+		return re.compile(util.escapeRegExp(self.marker), flags)
+	def removeMarkers(self,text):
+		return text.replace(self.marker,'')
 
 def init():
 	command.initCmds()

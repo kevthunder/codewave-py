@@ -13,7 +13,7 @@ class CmdInstance():
 		self.replaceStart = self.replaceEnd = None
 		self.inBox = self.indentLen = self.cmd = self.aliasedCmd = self.cmdOptions = None
 		self._prevEOL = self._nextEOL = self._rawWithFullLines = self._sameLinesPrefix = self._sameLinesSuffix = None
-		self.inited = false
+		self.inited = False
 		if not self.isEmpty():
 			self._checkCloser()
 			self.opening = self.str
@@ -116,40 +116,40 @@ class CmdInstance():
 			self.str = self.codewave.editor.textSubstr(self.pos,endPos)
 			self._removeCommentFromContent()
 		elif cl in self.sameLinesPrefix() and cr in self.sameLinesSuffix():
-          self.inBox = 1
-          self._removeCommentFromContent()
+			self.inBox = 1
+			self._removeCommentFromContent()
 	def _removeCommentFromContent(self):
 		if self.content:
 			ecl = util.escapeRegExp(self.codewave.wrapCommentLeft())
 			ecr = util.escapeRegExp(self.codewave.wrapCommentRight())
 			ed = util.escapeRegExp(self.codewave.deco)
 			re1 = re.compile("^\\s*"+ecl+"(?:"+ed+")+\\s*(.*?)\\s*(?:"+ed+")+"+ecr+"$", re.M)
-			re2 = re.compile("^(?:"+ed+")*"+ecr+"\n")
-			re3 = re.compile("\n\\s*"+ecl+"(?:"+ed+")*$")
+			re2 = re.compile("^\\s*(?:"+ed+")*"+ecr+"\r?\n")
+			re3 = re.compile("\n\\s*"+ecl+"(?:"+ed+")*\\s*$")
 			self.content = re.sub(re3,'',re.sub(re2,'',re.sub(re1,r'\1',self.content)))
 	def _getParentCmds(self):
 		p = self.codewave.getEnclosingCmd(self.getEndPos())
 		self.parent = p.init() if p is not None else None
-  def prevEOL(self):
-    if not self._prevEOL is not None:
-      self._prevEOL = self.codewave.findLineStart(self.pos)
-    return self._prevEOL
-  def nextEOL(self):
-    if not self._nextEOL is not None:
-      self._nextEOL = self.codewave.findLineEnd(self.getEndPos())
-    return self._nextEOL
-  def rawWithFullLines(self):
-    if not self._rawWithFullLines is not None:
-      self._rawWithFullLines = self.codewave.editor.textSubstr(self.prevEOL(),self.nextEOL())
-    return self._rawWithFullLines
-  def sameLinesPrefix(self):
-    if not self._sameLinesPrefix is not None:
-      self._sameLinesPrefix = self.codewave.editor.textSubstr(self.prevEOL(),self.pos)
-    return self._sameLinesPrefix
-  def sameLinesSuffix(self):
-    if not self._sameLinesSuffix is not None:
-      self._sameLinesSuffix = self.codewave.editor.textSubstr(self.getEndPos(),self.nextEOL())
-    return self._sameLinesSuffix
+	def prevEOL(self):
+		if not self._prevEOL is not None:
+			self._prevEOL = self.codewave.findLineStart(self.pos)
+		return self._prevEOL
+	def nextEOL(self):
+		if not self._nextEOL is not None:
+			self._nextEOL = self.codewave.findLineEnd(self.getEndPos())
+		return self._nextEOL
+	def rawWithFullLines(self):
+		if not self._rawWithFullLines is not None:
+			self._rawWithFullLines = self.codewave.editor.textSubstr(self.prevEOL(),self.nextEOL())
+		return self._rawWithFullLines
+	def sameLinesPrefix(self):
+		if not self._sameLinesPrefix is not None:
+			self._sameLinesPrefix = self.codewave.editor.textSubstr(self.prevEOL(),self.pos)
+		return self._sameLinesPrefix
+	def sameLinesSuffix(self):
+		if not self._sameLinesSuffix is not None:
+			self._sameLinesSuffix = self.codewave.editor.textSubstr(self.getEndPos(),self.nextEOL())
+		return self._sameLinesSuffix
 	def getCmd(self):
 		if not self.cmd is not None:
 			self._getParentCmds()
@@ -233,19 +233,18 @@ class CmdInstance():
 		return self.indentLen
 	def formatIndent(self,text):
 		if text is not None:
-			reg = re.compile(r'\t')
-			return re.sub(/\t/,'  ',text)
+			return re.sub("\t",'  ',text)
 		else:
 			return text
 	def applyIndent(self,text):
 		if text is not None:
-		reg = re.compile(r'\n',re.M)
-		return re.sub(reg, '\n'+util.repeatToLength(" ",self.getIndent()),text)
+			reg = re.compile(r'\n',re.M)
+			return re.sub(reg, '\n'+util.repeatToLength(" ",self.getIndent()),text)
 		else:
 			return text
 	def removeIndentFromContent(self,text):
 		if text is not None:
-			reg = re.compile('^\\s{'+self.getIndent()+'}',re.M)
+			reg = re.compile('^\\s{'+str(self.getIndent())+'}',re.M)
 			return re.sub(reg,'',text)
 		else:
 			return text
@@ -253,13 +252,13 @@ class CmdInstance():
 		prefix = suffix = ''
 		start = self.pos
 		end = self.getEndPos()
-    
+		
 		text = self.applyIndent(text)
 		if self.inBox is not None:
 			start = self.prevEOL()
 			end = self.nextEOL()
 			helper =  box_helper.BoxHelper(self.codewave).getOptFromLine(self.rawWithFullLines(),False)
-			res = helper.reformatLines(self.sameLinesPrefix()+self.codewave.marker+text+self.codewave.marker+self.sameLinesSuffix(),{multiline:False})
+			res = helper.reformatLines(self.sameLinesPrefix()+self.codewave.marker+text+self.codewave.marker+self.sameLinesSuffix(),{'multiline':False})
 			prefix,text,suffix = res.split(self.codewave.marker)
 		
 		cursorPos = start+len(prefix)+len(text)

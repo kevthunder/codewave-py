@@ -7,6 +7,8 @@ import codewave_core.cmd_finder as cmd_finder
 import codewave_core.text_parser as text_parser
 import codewave_core.closing_promp as closing_promp
 import codewave_core.command as command
+import codewave_core.context as context
+import codewave_core.process as process
 
 
 class Codewave():
@@ -25,23 +27,23 @@ class Codewave():
 			'checkCarret' : True,
 			'inInstance' : None
 		}
-		self.parent = options['parent']
+		self.parent = options['parent'] if 'parent' in options else None
 		
 		for key, val in defaults.items():
 			if key in options:
 				setattr(self,key,options[key])
 			elif self.parent is not None and key != 'parent':
-				setattr(self,key,getattr(parent,key))
+				setattr(self,key,getattr(self.parent,key))
 			else:
 				setattr(self,key,val)
 		if self.editor is not None :
 			self.editor.bindedTo(self) 
 
-		self.context = Codewave.Context(self)
+		self.context = context.Context(self)
 		if self.inInstance is not None:
 			self.context.parent = self.inInstance.context
 	def onActivationKey(self):
-		self.process = Codewave.Process()
+		self.process = process.Process()
 		logger.log('activation key')
 		cmd = self.commandOnCursorPos()
 		if cmd is not None :

@@ -99,7 +99,8 @@ class CmdInstance():
 		opening = self.codewave.brakets + self.cmdName
 		f = self.codewave.findMatchingPair(self.pos+len(self.str),opening,closing)
 		if f is not None:
-			return self.closingPos = f
+			self.closingPos = f
+			return self.closingPos
 	def _checkElongated(self):
 		endPos = self.getEndPos()
 		max = self.codewave.editor.textLen()
@@ -229,7 +230,7 @@ class CmdInstance():
 	def getIndent(self):
 		if self.indentLen is None:
 			if self.inBox is not None:
-				helper = box_helper.BoxHelper(self.codewave)
+				helper = box_helper.BoxHelper(self.context)
 				self.indentLen = len(helper.removeComment(self.sameLinesPrefix()))
 			else:
 				self.indentLen = self.pos - self.codewave.findLineStart(self.pos)

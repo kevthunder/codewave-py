@@ -1,10 +1,11 @@
 import codewave_core.cmd_finder as cmd_finder
 
 class Context():
-	def __init__(self,codewave):
+	def __init__(self,codewave = None):
 		self.codewave = codewave
 		self.nameSpaces = []
-	
+		self._namespaces = self.commentChar = None
+		self.parent = None
 	def addNameSpace(self,name):
 		if name not in self.nameSpaces :
 			self.nameSpaces.append(name)
@@ -18,23 +19,23 @@ class Context():
 	def removeNameSpace(self,name):
 		self.nameSpaces = [n for n in self.nameSpaces.filter if n != name]
 
-	def getNameSpaces(self,):
+	def getNameSpaces(self):
 		if self._namespaces is None:
-			npcs = ['core'].concat(self.nameSpaces)
+			npcs = set(['core']).union(self.nameSpaces)
 			if self.parent is not None:
-				npcs += self.parent.getNameSpaces()
-			self._namespaces = util.unique(npcs)
+				npcs = npcs.union(self.parent.getNameSpaces())
+			self._namespaces = list(npcs)
 		return self._namespaces
 	def getCmd(self,cmdName,nameSpaces = []):
 		finder = self.getFinder(cmdName,nameSpaces)
 		return finder.find()
 	def getFinder(self,cmdName,nameSpaces = []):
-		return cmd_finder.CmdFinder(cmdName, {
-			namespaces: nameSpaces
-			useDetectors: self.isRoot()
-			codewave: self.codewave
-			parentContext: self
-		})
+		return cmd_finder.CmdFinder(cmdName, 
+			namespaces= nameSpaces,
+			useDetectors= self.isRoot(),
+			codewave= self.codewave,
+			parentContext= self
+		)
 	def isRoot(self):
 		return not self.parent is not None
 	def wrapComment(self,str):
@@ -62,10 +63,9 @@ class Context():
 			return self.commentChar
 		cmd = self.getCmd('comment')
 		if cmd is not None:
-			res = cmd.result()
+			res = cmd.result(None)
 			if res is not None:
 				res = res.replace('~~content~~','%s')
-				if self.process is not None:
-					self.commentChar = res
+				self.commentChar = res
 				return res
-		return '<!-=1 %s -=1>'
+		return '<!-- %s -->'

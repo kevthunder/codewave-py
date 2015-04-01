@@ -2,6 +2,7 @@ import codewave_core.command as command
 import codewave_core.core_cmds as core_cmds
 import codewave_core.logger as logger
 import codewave_core.util as util
+import codewave_core.context as context
 
 class CmdFinder():
 	def __init__(self,names, **options):
@@ -21,16 +22,16 @@ class CmdFinder():
 			'codewave': None
 		}
 		self.names = names
-		self.parent = options['parent']
+		self.parent = options['parent'] if 'parent' in options else None
 		for key, val in defaults.items():
 			if key in options:
 				setattr(self,key,options[key])
-			elif parent is not None and key != 'parent':
-				setattr(self,key,getattr(parent,key))
+			elif self.parent is not None and key != 'parent':
+				setattr(self,key,getattr(self.parent,key))
 			else:
 				setattr(self,key,val)
 		if self.context is None:
-			self.context = Codewave.Context(self.codewave)
+			self.context = context.Context(self.codewave)
 		if self.parentContext is not None:
 			self.context.parent = self.parentContext
 		if self.namespaces is not None:
@@ -92,7 +93,7 @@ class CmdFinder():
 			next = self.root.getCmd(space)
 			if next is not None :
 				posibilities += CmdFinder(names, parent=self, root=next).findPosibilities()
-		for nspc in self.context.namespaces:
+		for nspc in self.context.getNameSpaces():
 			nspcName,rest = util.splitFirstNamespace(nspc,True)
 			next = self.root.getCmd(nspcName)
 			if next is not None :

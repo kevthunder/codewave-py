@@ -1,4 +1,4 @@
-import codewave_core.cmd_finder as cmd_finder
+
 
 class Context():
 	def __init__(self,codewave = None):
@@ -30,6 +30,7 @@ class Context():
 		finder = self.getFinder(cmdName,nameSpaces)
 		return finder.find()
 	def getFinder(self,cmdName,nameSpaces = []):
+		import codewave_core.cmd_finder as cmd_finder
 		return cmd_finder.CmdFinder(cmdName, 
 			namespaces= nameSpaces,
 			useDetectors= self.isRoot(),

@@ -117,12 +117,14 @@ class CmdInstance():
 	def result(self): 
 		self.init()
 		if self.resultIsAvailable():
-			if (res = self.rawResult())?:
+			res = self.rawResult()
+			if res is not None:
 				res = self.formatIndent(res)
 				if len(res) > 0 and self.getOption('parse',self) :
 					parser = self.getParserForText(res)
 					res = parser.parseAll()
-				if alterFunct = self.getOption('alterResult',self):
+				alterFunct = self.getOption('alterResult',self)
+				if alterFunct is not None:
 					res = alterFunct(res,self)
 				return res
 	def getParserForText(self,txt=''):

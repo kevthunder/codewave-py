@@ -140,20 +140,20 @@ class Codewave():
 		if f is not None:
 			return f.pos 
 	def findAnyNext(self,start,strings,direction = 1):
-    if direction > 0:
-      text = self.editor.textSubstr(start,self.editor.textLen())
-    else:
-      text = self.editor.textSubstr(0,start)
-    bestPos = bestStr = None
-    for stri in strings:
-      pos = if direction > 0 then text.find(stri) else text.rfind(stri)
-      if pos != -1:
-        if not bestPos is not None or bestPos*direction > pos*direction:
-          bestPos = pos
-          bestStr = stri
-    if bestStr is not None:
-      return util.StrPos((if direction > 0 then bestPos + start else bestPos),bestStr)
-    return None
+		if direction > 0:
+			text = self.editor.textSubstr(start,self.editor.textLen())
+		else:
+			text = self.editor.textSubstr(0,start)
+		bestPos = bestStr = None
+		for stri in strings:
+			pos = text.find(stri) if direction > 0  else text.rfind(stri)
+			if pos != -1:
+				if not bestPos is not None or bestPos*direction > pos*direction:
+					bestPos = pos
+					bestStr = stri
+		if bestStr is not None:
+			return util.StrPos((bestPos + start if direction > 0 else bestPos),bestStr)
+		return None
 	def findMatchingPair(self,startPos,opening,closing,direction = 1):
 		pos = startPos
 		nested = 0

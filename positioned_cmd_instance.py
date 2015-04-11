@@ -1,12 +1,13 @@
 import re
 import codewave_core.codewave
+import codewave_core.cmd_instance as cmd_instance
 import codewave_core.util as util
 import codewave_core.logger as logger
 import codewave_core.command as command
 import codewave_core.text_parser as text_parser
 import codewave_core.box_helper as box_helper
 
-class PositionedCmdInstance(CmdInstance):
+class PositionedCmdInstance(cmd_instance.CmdInstance):
 	def __init__(self, codewave,pos,str):
 		self.codewave,self.pos,self.str = codewave,pos,str
 		self.replaceStart = self.replaceEnd = None

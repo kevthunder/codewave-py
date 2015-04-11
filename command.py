@@ -1,3 +1,4 @@
+import textwrap
 import codewave_core.storage as storage
 import codewave_core.logger as logger
 import codewave_core.util as util
@@ -49,7 +50,7 @@ class Command():
 			)
 			self.depth = (
 				self._parent.depth + 1
-				if self._parent is not None and self._parent.depth is not None:
+				if self._parent is not None and self._parent.depth is not None
 				else 0
 			)
 	def init(self):
@@ -98,10 +99,10 @@ class Command():
 				self.options[key] = val
 	def _optionsForAliased(self,aliased):
 		opt = {}
-		opt.update(@defaultOptions)
+		opt.update(self.defaultOptions)
 		if aliased is not None:
 			opt.update(aliased.getOptions())
-		opt.update(@options)
+		opt.update(self.options)
 		return opt
 	def getOptions(self):
 		return self._optionsForAliased(self.getAliased())

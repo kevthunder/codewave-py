@@ -202,7 +202,7 @@ def initCmds():
 			'cls' : CloseCmd
 		},
 		'edit':{
-			'cmds' : EditCmd.setCmds({
+			'cmds' : editCmdSetCmds({
 				'save':{
 					'aliasOf': 'core:exec_parent'
 				}
@@ -223,7 +223,7 @@ def initCmds():
 					~~!close|~~
 					~~/box~~
 					""")
-			}
+			},
 			'result' : renameCommand,
 			'parse' : True
 		},
@@ -241,7 +241,7 @@ def initCmds():
 					~~!close|~~
 					~~/box~~
 					""")
-			}
+			},
 			'result' : removeCommand,
 			'parse' : True
 		},
@@ -253,7 +253,7 @@ def initCmds():
 					~~!close|~~
 					~~/box~~
 					""")
-			}
+			},
 			'result' : aliasCommand,
 			'parse' : True
 		},
@@ -277,7 +277,7 @@ def initCmds():
 			'nameToParam' : 'abbr'
 		},
 	})
-  
+	
 	css = command.cmds.addCmd(command.Command('css'))
 	css.addCmds({
 		'fallback':{
@@ -376,7 +376,7 @@ def initCmds():
 	
 command.cmdInitialisers.add(initCmds)
 
-def setVarCmd(name,base) :
+def setVarCmd(name, base = {}) :
 	base['execute'] = (lambda instance: setVar(name,instance))
 	return base
 def setVar(name,instance):
@@ -390,7 +390,7 @@ def setVar(name,instance):
 		instance.codewave.vars[name] = val
 		return val
 
-def setBoolVarCmd(name,base) :
+def setBoolVarCmd(name, base = {}) :
 	base['execute'] = (lambda instance: setBoolVar(name,instance))
 	return base
 def setBoolVar(name,instance):
@@ -430,34 +430,34 @@ def renameCommand(instance):
 	if origninalName is not None and newName is not None:
 		cmd = instance.context.getCmd(origninalName)
 		console.log(cmd)
-		if savedCmds[origninalName] is not None and cmd is not None:
+		if origninalName in savedCmds and cmd is not None:
 			if not ':' in newName:
 				newName = cmd.fullName.replace(origninalName,'') + newName
 			cmdData = savedCmds[origninalName]
 			command.cmds.setCmdData(newName,cmdData)
 			cmd.unregister()
 			savedCmds[newName] = cmdData
-			delete savedCmds[origninalName]
+			del savedCmds[origninalName]
 			storage.save('cmds',savedCmds)
 			return ""
 		elif cmd is not None :
 			return "~~not_applicable~~"
-		else 
+		else:
 			return "~~not_found~~"
 def removeCommand(instance):
 	name = instance.getParam([0,'name'])
 	if name is not None:
 		savedCmds = storage.load('cmds')
 		cmd = instance.context.getCmd(name)
-		if savedCmds[name] is not None and cmd is not None:
+		if name in savedCmds and cmd is not None:
 			cmdData = savedCmds[name]
 			cmd.unregister()
-			delete savedCmds[name]
+			del savedCmds[name]
 			storage.save('cmds',savedCmds)
 			return ""
 		elif cmd is not None :
 			return "~~not_applicable~~"
-		else 
+		else:
 			return "~~not_found~~"
 def aliasCommand(instance):
 	name = instance.getParam([0,'name'])
@@ -470,7 +470,7 @@ def aliasCommand(instance):
 				# alias = cmd.fullName.replace(name,'') + alias
 			command.saveCmd(alias, { aliasOf: cmd.fullName })
 			return ""
-		else 
+		else:
 			return "~~not_found~~"
 def closePhpForContent(instance):
 	instance.content = ' ?>'+(instance.content or '')+'<?php '
@@ -549,9 +549,9 @@ class EditCmd(command.BaseCommand):
 				p.writeFor(parser,data)
 			command.saveCmd(self.cmdName, data)
 			return ''
-  def propsDisplay(self):
-      cmd = self.cmd
-      return "\n".join([p for p in map(lambda p: p.display(cmd), editCmdProps) if p is not None])
+	def propsDisplay(self):
+			cmd = self.cmd
+			return "\n".join([p for p in map(lambda p: p.display(cmd), editCmdProps) if p is not None])
 	def resultWithoutContent(self):
 		if not self.cmd or self.editable:
 			name = self.cmd.fullName if self.cmd else self.cmdName

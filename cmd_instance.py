@@ -9,7 +9,9 @@ import codewave_core.box_helper as box_helper
 class CmdInstance():
 	def __init__(self, cmd,context = None):
 		self.cmd,self.context = cmd,context
-
+		self.content = self.cmdObj = None
+		self.indentLen = self.cmd = self.aliasedCmd = self.cmdOptions = None
+		
 	def init(self):
 		if not self.isEmpty() or self.inited:
 			self.inited = True

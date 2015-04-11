@@ -58,14 +58,18 @@ class Context():
 			return str + cc[i+2:]
 		else:
 			return str + ' ' + cc
+	def cmdInstanceFor(self,cmd):
+		return cmd_instance.CmdInstance(cmd,self)
 	def getCommentChar(self):
 		if self.commentChar is not None:
 			return self.commentChar
 		cmd = self.getCmd('comment')
+		char = '<!-- %s -->'
 		if cmd is not None:
-			res = cmd.result(None)
+			inst = self.cmdInstanceFor(cmd)
+			inst.content = '%s'
+			res = inst.result()
 			if res is not None:
-				res = res.replace('~~content~~','%s')
-				self.commentChar = res
-				return res
-		return '<!-- %s -->'
+				char = res
+		self.commentChar = char
+		return self.commentChar

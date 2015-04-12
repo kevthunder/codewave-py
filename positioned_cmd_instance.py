@@ -9,7 +9,7 @@ import codewave_core.box_helper as box_helper
 
 class PositionedCmdInstance(cmd_instance.CmdInstance):
 	def __init__(self, codewave,pos,str):
-		super(PositionedCmdInstance, self).__init__()
+		super(self.__class__, self).__init__()
 		self.codewave,self.pos,self.str = codewave,pos,str
 		self.replaceStart = self.replaceEnd = None
 		self.inBox = self.closingPos = None

@@ -9,6 +9,7 @@ import codewave_core.box_helper as box_helper
 
 class PositionedCmdInstance(cmd_instance.CmdInstance):
 	def __init__(self, codewave,pos,str):
+		super(PositionedCmdInstance, self).__init__()
 		self.codewave,self.pos,self.str = codewave,pos,str
 		self.replaceStart = self.replaceEnd = None
 		self.inBox = self.closingPos = None
@@ -45,7 +46,7 @@ class PositionedCmdInstance(cmd_instance.CmdInstance):
 		self.params = []
 		self.named = {}
 		if self.cmd is not None: 
-			self.named.update(self.cmd.getDefaults(self))
+			self.named.update(self.cmd.getDefaults())
 			nameToParam = self.getOption('nameToParam')
 			if nameToParam is not None :
 				self.named[nameToParam] = self.cmdName
@@ -146,7 +147,7 @@ class PositionedCmdInstance(cmd_instance.CmdInstance):
 		self.getCmd()
 		self._checkBox()
 		self.content = self.removeIndentFromContent(self.content)
-		super
+		super(PositionedCmdInstance, self)._getCmdObj()
 	def _initParams(self):
 		self._parseParams(self.rawParams)
 	def getContext(self):

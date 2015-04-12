@@ -562,7 +562,7 @@ class EditCmd(command.BaseCommand):
 				~~!save~~ ~~!close~~
 				~~/box~~
 				""") % {'cmd': self.instance.cmd.fullName + ' ' +name, 'props': self.propsDisplay()})
-			parser.checkCarret = no
+			parser.checkCarret = False
 			return parser.getText() if self.verbalize else parser.parseAll()
 
 def editCmdSetCmds(base):

@@ -60,6 +60,7 @@ class Context():
 		else:
 			return str + ' ' + cc
 	def cmdInstanceFor(self,cmd):
+		import codewave_core.cmd_instance as cmd_instance
 		return cmd_instance.CmdInstance(cmd,self)
 	def getCommentChar(self):
 		if self.commentChar is not None:

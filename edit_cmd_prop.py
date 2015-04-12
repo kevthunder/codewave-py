@@ -33,20 +33,25 @@ class EditCmdProp():
 			if self.opt is not None:
 				return cmd.getOption(self.opt)
 			if self.funct is not None:
-				return cmd[self.funct]()
+				return getattr(cmd,self.funct)()
 			if self.var is not None:
-				return cmd[self.var]
+				return getattr(cmd,self.var)
 	def showForCmd(self,cmd):
 		val = self.valFromCmd(cmd)
 		return self.showEmpty or val is not None
 	def display(self,cmd):
 		if self.showForCmd(cmd):
-			return ("~~!"+self.name+"~~" +
-				(self.valFromCmd(cmd) or "")+("|" if self.carret else "") +
-				"~~!/"+self.name+"~~")
+			return ("~~"+self.name+"~~\n" +
+				(self.valFromCmd(cmd) or "")+("|" if self.carret else "")+"\n" +
+				"~~/"+self.name+"~~")
 		
 		
 class source(EditCmdProp):
+	def valFromCmd(self,cmd):
+		res = super(source, self).valFromCmd(cmd)
+		if res is not None :
+			res = res.replace('|', '||')
+		return res
 	def setCmd(self,cmds):
 		cmds[self.name] = codewave_core.core_cmds.setVarCmd(self.name,{'preventParseAll' : True})
 	def showForCmd(self,cmd):

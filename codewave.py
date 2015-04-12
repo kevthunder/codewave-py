@@ -189,10 +189,11 @@ class Codewave():
 				break
 			pos = cmd.getEndPos()
 			self.editor.setCursorPos(pos)
-			if recursive and cmd.content is not None and (cmd.getCmd() is None or not cmd.cmd.getOption('preventParseAll')):
+			cmd.init()
+			if recursive and cmd.content is not None and (cmd.getCmd() is None or not cmd.getOption('preventParseAll')):
 				parser = Codewave(text_parser.TextParser(cmd.content), parent=self)
 				cmd.content = parser.parseAll()
-			if cmd.init().execute() is not None:
+			if cmd.execute() is not None:
 				if cmd.replaceEnd is not None:
 					pos = cmd.replaceEnd
 				else:

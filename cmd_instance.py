@@ -7,7 +7,7 @@ import codewave_core.text_parser as text_parser
 import codewave_core.box_helper as box_helper
 
 class CmdInstance():
-	def __init__(self, cmd,context = None):
+	def __init__(self, cmd = None, context = None):
 		self.cmd,self.context = cmd,context
 		self.content = self.cmdObj = None
 		self.indentLen = self.cmd = self.aliasedCmd = self.cmdOptions = None
@@ -41,7 +41,7 @@ class CmdInstance():
 				self.cmdObj = cmd.cls(self)
 				return self.cmdObj
 	def _initParams(self):
-		self.named = self.getDefaults(self)
+		self.named = self.getDefaults()
 	def _getParentNamespaces(self):
 		return array()
 	def isEmpty(self):
@@ -120,10 +120,10 @@ class CmdInstance():
 			res = self.rawResult()
 			if res is not None:
 				res = self.formatIndent(res)
-				if len(res) > 0 and self.getOption('parse',self) :
+				if len(res) > 0 and self.getOption('parse') :
 					parser = self.getParserForText(res)
 					res = parser.parseAll()
-				alterFunct = self.getOption('alterResult',self)
+				alterFunct = self.getOption('alterResult')
 				if alterFunct is not None:
 					res = alterFunct(res,self)
 				return res

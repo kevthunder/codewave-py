@@ -82,7 +82,7 @@ class Command():
 		res = {}
 		aliased = self.getAliased()
 		if aliased is not None:
-			res.update(aliased.getDefaults(instance))
+			res.update(aliased.getDefaults())
 		res.update(self.defaults)
 		return res
 	def _aliasedFromFinder(self,finder):
@@ -91,7 +91,7 @@ class Command():
 		return finder.find()
 	def getAliased(self):
 		if self.aliasOf is not None:
-			context = context.Context()
+			context = codewave_core.context.Context()
 			return self._aliasedFromFinder(context.getFinder(self.aliasOf))
 	def setOptions(self,data):
 		for key, val in data.items():

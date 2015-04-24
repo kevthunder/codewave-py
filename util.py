@@ -14,6 +14,18 @@ class Pos():
 		return self.start <= pt and pt <= self.end
 	def containsPos(self,pos):
 		return self.start <= pos.start and pos.end <= self.end
+	def wrappedBy(self,prefix,suffix):
+		return WrappedPos(self.start - len(prefix), self.start, self.end, self.end + len(suffix))
+	def textFromEditor(self,editor):
+		editor.textSubstr(self.start, self.end)
+	def applyOffset(self,offset):
+		if offset != 0:
+			self.start += offset
+			self.end += offset
+		return self
+	def copy(self):
+		return Pos(self.start,self.end)
+		
 class WrappedPos(Pos):
 	def __init__(self,start,innerStart,innerEnd,end):
 		self.start,self.innerStart,self.innerEnd,self.end = start,innerStart,innerEnd,end
@@ -21,6 +33,16 @@ class WrappedPos(Pos):
 		return self.innerStart <= pt and pt <= self.innerEnd
 	def innerContainsPos(self,pos):
 		return self.innerStart <= pos.start and pos.end <= self.innerEnd
+	def innerTextFromEditor(self,editor):
+		editor.textSubstr(self.innerStart, self.innerEnd)
+	def setInnerLen(self,len):
+		self.moveSufix(self.innerStart + len)
+	def moveSuffix(self,pt):
+		suffixLen = self.end - self.innerEnd
+		self.innerEnd = pt
+		self.end = self.innerEnd + suffixLen
+	def copy(self):
+		return WrappedPos(self.start,self.innerStart,self.innerEnd,self.end)
 
 class Size():
 	def __init__(self,width,height):
@@ -29,6 +51,7 @@ class Size():
 class Replacement():
 	def __init__(self, start, end, text, prefix ='', suffix = ''):
 		self.start, self.end, self.text, self.prefix, self.suffix = start, end, text, prefix, suffix
+		self.selections = []
 	def resPosBeforePrefix(self):
 		return self.start+len(self.prefix)+len(self.text)
 	def resEnd(self): 

@@ -100,7 +100,7 @@ class Replacement():
 		
 class Wrapping(Replacement):
 	def __init__(self, start, end, prefix ='', suffix = ''):
-	self.start, self.end, self.prefix, self.suffix = start, end, prefix, suffix
+		self.start, self.end, self.prefix, self.suffix = start, end, prefix, suffix
 		self.text = ''
 		self.selections = []
 	def applyToEditor(self,editor):

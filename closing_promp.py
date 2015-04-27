@@ -28,12 +28,12 @@ class ClosingPromp():
 			self.stop()
 			self.cleanClose()
 		else:
-			self.continue()
+			self.resume()
 			
 	def skipEvent(self,ch):
 		return ch is not None and ch.charCodeAt(0) != 32
 	
-	def continue(self):
+	def resume(self):
 		pass
 		
 	def shouldStop(self):
@@ -43,16 +43,17 @@ class ClosingPromp():
 		replacements = []
 		selections = self.getSelections()
 		for sel in selections:
-			if pos = self.whithinOpenBounds(sel):
+			pos = self.whithinOpenBounds(sel)
+			if pos is not None:
 				start = sel
-			else
+			else:
 				end = self.whithinCloseBounds(sel)
 				if end is not None and start is not None:
-				res = end.innerTextFromEditor(self.codewave.editor).split(' ')[0]
-				repl = util.Replacement(end.innerStart,end.innerEnd,res)
-				repl.selections = [start]
-				replacements.append(repl)
-				start = None
+					res = end.innerTextFromEditor(self.codewave.editor).split(' ')[0]
+					repl = util.Replacement(end.innerStart,end.innerEnd,res)
+					repl.selections = [start]
+					replacements.append(repl)
+					start = None
 		self.codewave.editor.applyReplacements(replacements)
 	def getSelections(self):
 		self.codewave.editor.getMultiSel()
@@ -70,9 +71,10 @@ class ClosingPromp():
 		replacements = []
 		start = None
 		for sel in selections:
-			if pos = self.whithinOpenBounds(sel):
+			pos = self.whithinOpenBounds(sel)
+			if pos is not None:
 				start = pos
-			else
+			else:
 				end = self.whithinCloseBounds(sel)
 				if end is not None and start is not None:
 					start = None
@@ -82,8 +84,12 @@ class ClosingPromp():
 		if self._typed is None:
 			cpos = self.codewave.editor.getCursorPos()
 			innerStart = self.replacements[0].start + len(self.codewave.brakets)
-			if self.codewave.findPrevBraket(cpos.start) == self.replacements[0].start and (innerEnd = self.codewave.findNextBraket(innerStart))? and innerEnd >= cpos.end:
-				self._typed = self.codewave.editor.textSubstr(innerStart, innerEnd)
+			if self.codewave.findPrevBraket(cpos.start) == self.replacements[0].start :
+				innerEnd = self.codewave.findNextBraket(innerStart)
+				if innerEnd is not None and innerEnd >= cpos.end:
+					self._typed = self.codewave.editor.textSubstr(innerStart, innerEnd)
+				else:
+					self._typed = False
 			else:
 				self._typed = False
 		return self._typed
@@ -91,14 +97,14 @@ class ClosingPromp():
 		for i, repl in enumerate(self.replacements):
 			targetPos = self.startPosAt(i)
 			targetText = self.codewave.brakets + self.typed() + self.codewave.brakets
-			if targetPos.innerContainsPos(pos) && targetPos.textFromEditor(self.codewave.editor) == targetText:
+			if targetPos.innerContainsPos(pos) and targetPos.textFromEditor(self.codewave.editor) == targetText:
 				return targetPos
 		return False
 	def whithinCloseBounds(self,pos):
 		for i, repl in enumerate(self.replacements):
 			targetPos = self.endPosAt(i)
 			targetText = self.codewave.brakets + self.codewave.closeChar + self.typed() + self.codewave.brakets
-			if targetPos.innerContainsPos(pos) && targetPos.textFromEditor(self.codewave.editor) == targetText:
+			if targetPos.innerContainsPos(pos) and targetPos.textFromEditor(self.codewave.editor) == targetText:
 				return targetPos
 		return False
 	def startPosAt(self,index):
@@ -113,7 +119,7 @@ class ClosingPromp():
 			).wrappedBy(self.codewave.brakets + self.codewave.closeChar, self.codewave.brakets)
 
 class SimulatedClosingPromp(ClosingPromp):
-	def continue(self):
+	def resume(self):
 		self.simulateType()
 	def simulateType(self):
 		targetText = self.codewave.brakets + self.codewave.closeChar + self.typed() + self.codewave.brakets
@@ -128,8 +134,8 @@ class SimulatedClosingPromp(ClosingPromp):
 		return False
 	def getSelections(self):
 		return [
-				self.codewave.editor.getCursorPos()
-				self.replacements[0].selections[1] + self.typed()len()
+				self.codewave.editor.getCursorPos(),
+				self.replacements[0].selections[1] + len(self.typed())
 			]
 	def whithinCloseBounds(self,pos):
 		for i, repl in enumerate(self.replacements):
@@ -141,8 +147,8 @@ class SimulatedClosingPromp(ClosingPromp):
 					return targetPos
 		return False
 
-def self.closing_promp.ClosingPromp.newFor(codewave,selections):
+def newFor(codewave,selections):
 	if codewave.editor.allowMultiSelection():
 		return closing_promp.ClosingPromp(codewave,selections)
 	else:
-		return Codewave.SimulatedClosingPromp(codewave,selections)
+		return closing_promp.SimulatedClosingPromp(codewave,selections)

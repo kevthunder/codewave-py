@@ -65,7 +65,7 @@ class Codewave():
 				logger.log(cmd)
 				cmd.execute()
 			else:
-			if multiPos[0].start == multiPos[0].end:
+				if multiPos[0].start == multiPos[0].end:
 					self.addBrakets(multiPos)
 				else:
 					self.promptClosingCmd(multiPos)

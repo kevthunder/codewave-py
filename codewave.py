@@ -177,7 +177,7 @@ class Codewave():
 				nested+=1
 		return None
 	def addBrakets(self,pos):
-		pos = util.posCollection(pos)
+		pos = util.PosCollection(pos)
 		replacements = map( lambda r: r.selectContent(), pos.wrap(self.brakets,self.brakets))
 		self.editor.applyReplacements(replacements)
 	def promptClosingCmd(self,selections):

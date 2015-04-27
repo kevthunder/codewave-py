@@ -483,6 +483,7 @@ class BoxCmd(command.BaseCommand):
 			self.helper.closeText = self.instance.codewave.brakets + self.instance.codewave.closeChar + self.cmd.split(" ")[0] + self.instance.codewave.brakets
 		self.helper.deco = self.instance.codewave.deco
 		self.helper.pad = 2
+		self._bounds = None
 		
 	def height(self):
 		if self.bounds() is not None:

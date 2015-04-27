@@ -52,7 +52,7 @@ class Editor():
 		for repl in replacements:
 			repl.applyOffset(offset)
 			repl.applyToEditor(self)
-			offset += repl.offsetAfter(self)
+			offset += repl.offsetAfter()
 			
 			selections += repl.selections
 		self.applyReplacementsSelections(selections)

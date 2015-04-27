@@ -55,16 +55,16 @@ class Replacement():
 	def resPosBeforePrefix(self):
 		return self.start+len(self.prefix)+len(self.text)
 	def resEnd(self,editor = None): 
-		return len(self.start+self.finalText(editor))
+		return self.start+len(self.finalText(editor))
 	def applyToEditor(self,editor):
 		editor.spliceText(self.start, self.end, self.finalText(editor))
 	def necessaryFor(self,editor):
 		return self.finalText(editor) != editor.textSubstr(self.start, self.end)
 	def originalTextWith(self,editor):
-		editor.textSubstr(self.start, self.end)
+		return editor.textSubstr(self.start, self.end)
 	def finalText(self,editor = None):
 		return self.prefix+self.text+self.suffix
-	def offsetAfter(self,): 
+	def offsetAfter(self): 
 		return len(self.finalText()) - (self.end - self.start)
 	def applyOffset(self,offset):
 		if offset != 0:
@@ -95,7 +95,7 @@ class Replacement():
 		return self
 	def copy(self): 
 		res = Replacement(self.start, self.end, self.text, self.prefix, self.suffix)
-		res.selections = map(lambda s: s.copy(), self.selections)
+		res.selections = list(map(lambda s: s.copy(), self.selections))
 		return res
 		
 class Wrapping(Replacement):
@@ -105,7 +105,7 @@ class Wrapping(Replacement):
 		self.selections = []
 	def applyToEditor(self,editor):
 		self.adjustSelFor(editor)
-		super(editor)
+		super(self.__class__, self).applyToEditor(editor)
 	def adjustSelFor(self,editor):
 		offset = len(self.originalTextWith(editor))
 		for sel in self.selections:
@@ -124,7 +124,7 @@ class Wrapping(Replacement):
 					
 	def copy(self): 
 		res = Wrapping(self.start, self.end, self.prefix, self.suffix)
-		res.selections = map(lambda s: s.copy(), self.selections)
+		res.selections = list(map(lambda s: s.copy(), self.selections))
 		return res
 		
 
@@ -219,7 +219,7 @@ def removeCarret(txt, carretChar = '|'):
 def getAndRemoveFirstCarret(txt, carretChar = '|'):
 	pos = getCarretPos(txt,carretChar)
 	if pos is not None:
-		txt = txt.substr(0,pos) + txt.substr(pos+len(carretChar))
+		txt = txt[0:pos] + txt[pos+len(carretChar):]
 		return [pos,txt]
 		
 def getCarretPos(txt, carretChar = '|'):
@@ -236,11 +236,14 @@ class PosCollection(object):
 			return getattr(self, attr)
 		return getattr(self._wrapped_obj, attr)
 		
+	def __iter__(self):
+			return self._wrapped_obj.__iter__()
+			
 	def wrap(self, prefix, suffix):
-		return map( lambda p: Wrapping(p.start, p.end, prefix, suffix), self)
+		return list(map( lambda p: Wrapping(p.start, p.end, prefix, suffix), self))
 		
 	def replace(self, txt):
-		return map( lambda p: Replacement(p.start, p.end, txt), self)
+		return list(map( lambda p: Replacement(p.start, p.end, txt), self))
 		
 def union(a1,a2):
 	return list(set(a1).union(a2))

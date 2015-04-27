@@ -2,10 +2,10 @@ import codewave_core.logger as logger
 import codewave_core.util as util
 
 class ClosingPromp():
-	def __init__(self,codewave,start,end):
+	def __init__(self, codewave,selections):
 		self.codewave = codewave
 		self._typed = None
-		self.selections = util.posCollection(selections)
+		self.selections = util.PosCollection(selections)
 	def begin(self):
 		self.started = True
 		self.addCarrets()
@@ -13,10 +13,10 @@ class ClosingPromp():
 			self.codewave.editor.addChangeListener( self.onChange )
 		return self
 	def addCarrets(self):
-		self.replacements = map(lambda p: p.carretToSel(), self.selections.wrap(
+		self.replacements = list(map(lambda p: p.carretToSel(), self.selections.wrap(
 			self.codewave.brakets + self.codewave.carretChar + self.codewave.brakets + "\n",
 			"\n" + self.codewave.brakets + self.codewave.closeChar + self.codewave.carretChar + self.codewave.brakets
-		))
+		)))
 		self.codewave.editor.applyReplacements(self.replacements)
 	def invalidTyped(self):
 		self._typed = None
@@ -149,6 +149,6 @@ class SimulatedClosingPromp(ClosingPromp):
 
 def newFor(codewave,selections):
 	if codewave.editor.allowMultiSelection():
-		return closing_promp.ClosingPromp(codewave,selections)
+		return ClosingPromp(codewave,selections)
 	else:
-		return closing_promp.SimulatedClosingPromp(codewave,selections)
+		return SimulatedClosingPromp(codewave,selections)

@@ -178,7 +178,7 @@ class Codewave():
 		return None
 	def addBrakets(self,pos):
 		pos = util.PosCollection(pos)
-		replacements = map( lambda r: r.selectContent(), pos.wrap(self.brakets,self.brakets))
+		replacements = list(map( lambda r: r.selectContent(), pos.wrap(self.brakets,self.brakets)))
 		self.editor.applyReplacements(replacements)
 	def promptClosingCmd(self,selections):
 		if self.closingPromp is not None:

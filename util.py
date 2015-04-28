@@ -48,7 +48,7 @@ class Size():
 	def __init__(self,width,height):
 		self.width,self.height = width,height
 
-class Replacement():
+class Replacement(object):
 	def __init__(self, start, end, text, prefix ='', suffix = ''):
 		self.start, self.end, self.text, self.prefix, self.suffix = start, end, text, prefix, suffix
 		self.selections = []

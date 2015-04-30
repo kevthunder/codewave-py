@@ -17,7 +17,7 @@ class Pos():
 	def wrappedBy(self,prefix,suffix):
 		return WrappedPos(self.start - len(prefix), self.start, self.end, self.end + len(suffix))
 	def textFromEditor(self,editor):
-		editor.textSubstr(self.start, self.end)
+		return editor.textSubstr(self.start, self.end)
 	def applyOffset(self,offset):
 		if offset != 0:
 			self.start += offset
@@ -34,7 +34,7 @@ class WrappedPos(Pos):
 	def innerContainsPos(self,pos):
 		return self.innerStart <= pos.start and pos.end <= self.innerEnd
 	def innerTextFromEditor(self,editor):
-		editor.textSubstr(self.innerStart, self.innerEnd)
+		return editor.textSubstr(self.innerStart, self.innerEnd)
 	def setInnerLen(self,len):
 		self.moveSufix(self.innerStart + len)
 	def moveSuffix(self,pt):

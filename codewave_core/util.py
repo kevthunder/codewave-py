@@ -8,7 +8,9 @@ class StrPos():
 		self.pos + len(self.str)
 
 class Pos():
-	def __init__(self,start,end):
+	def __init__(self,start,end = None):
+		if end is None :
+			end = start
 		self.start,self.end = start,end
 	def containsPt(self,pt):
 		return self.start <= pt and pt <= self.end
@@ -25,6 +27,8 @@ class Pos():
 		return self
 	def copy(self):
 		return Pos(self.start,self.end)
+	def raw(self):
+		return [self.start,self.end]
 		
 class WrappedPos(Pos):
 	def __init__(self,start,innerStart,innerEnd,end):

@@ -1,6 +1,7 @@
 class Editor():
 	def __init__(self):
 		self.namespace = None
+		self._lang = None
 		
 	def bindedTo(self,codewave):
 		pass
@@ -30,7 +31,9 @@ class Editor():
 	def endUndoAction(self):
 		pass
 	def getLang(self):
-		return None
+		return self._lang
+	def setLang(self,val):
+		self._lang = val
 	def getEmmetContextObject(self):
 		return None
 	def allowMultiSelection(self):

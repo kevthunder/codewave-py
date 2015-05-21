@@ -135,7 +135,7 @@ def initCmds():
 					'cmds' : {
 						'intro':{
 							'result' : textwrap.dedent("""
-								Codewave allows you to make you own commands (or abbreviations) 
+								Codewave allows you to make your own commands (or abbreviations) 
 								put your content inside "source" the do "save". Try adding any 
 								text that is on your mind.
 								~~!edit my_new_command|~~

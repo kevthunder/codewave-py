@@ -8,7 +8,7 @@ import codewave_core.codewave as codewave
 import codewave_core.text_parser as text_parser
 import codewave_core.box_helper as box_helper
 
-class CodewaveTestCase(unittest.TestCase):
+class BoxHelperTestCase(unittest.TestCase):
 	def setUp(self):
 		codewave.init()
 		self.codewave = codewave.Codewave(text_parser.TextParser('Lorem Ipsum'))
@@ -47,3 +47,8 @@ class CodewaveTestCase(unittest.TestCase):
 		# self.boxHelper = box_helper.BoxHelper(self.codewave.context)
 		# self.boxHelper.getOptFromLine('<!-- ~  <!-- ~  123456789  ~ -->  ~ -->',False)
 		# self.assertEqual(self.boxHelper.width, 24)
+		
+
+		
+if __name__ == '__main__':
+		unittest.main()

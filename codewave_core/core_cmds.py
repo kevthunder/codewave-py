@@ -468,7 +468,7 @@ def aliasCommand(instance):
 			cmd = cmd.getAliased() or cmd
 			# unless ':' in alias
 				# alias = cmd.fullName.replace(name,'') + alias
-			command.saveCmd(alias, { aliasOf: cmd.fullName })
+			command.saveCmd(alias, { 'aliasOf': cmd.fullName })
 			return ""
 		else:
 			return "~~not_found~~"

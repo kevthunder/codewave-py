@@ -26,7 +26,7 @@ class EditCmdProp(object):
 		cmds[self.name] = codewave_core.core_cmds.setVarCmd(self.name)
 	
 	def writeFor(self,parser,obj):
-		if parser.vars[self.name] is not None:
+		if self.name in parser.vars:
 			obj[self.dataName] = parser.vars[self.name]
 	def valFromCmd(self,cmd):
 		if cmd is not None:
@@ -69,7 +69,7 @@ class revBool(EditCmdProp):
 	def setCmd(self,cmds):
 		cmds[self.name] = codewave_core.core_cmds.setBoolVarCmd(self.name)
 	def writeFor(self,parser,obj):
-		if parser.vars[self.name] is not None:
+		if self.name in parser.vars:
 			obj[self.dataName] = not parser.vars[self.name]
 	def display(self,cmd):
 		val = self.valFromCmd(cmd)

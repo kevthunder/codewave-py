@@ -5,6 +5,7 @@ class ClosingPromp():
 	def __init__(self, codewave,selections):
 		self.codewave = codewave
 		self._typed = None
+		self.nbChanges = 0
 		self.selections = util.PosCollection(selections)
 	def begin(self):
 		self.started = True
@@ -24,6 +25,7 @@ class ClosingPromp():
 		self.invalidTyped()
 		if self.skipEvent(ch):
 			return
+		self.nbChanges+=1
 		if self.shouldStop():
 			self.stop()
 			self.cleanClose()

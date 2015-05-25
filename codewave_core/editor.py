@@ -1,3 +1,5 @@
+import codewave_core.util as util
+
 class Editor():
 	def __init__(self):
 		self.namespace = None
@@ -49,12 +51,37 @@ class Editor():
 	def removeChangeListener(self,callback):
 		raise NotImplementedError
 	
+	def getLineAt(self,pos):
+		return util.Pos(self.findLineStart(pos),self.findLineEnd(pos))
+	def findLineStart(self,pos):
+		p = self.findAnyNext(pos ,["\n"], -1)
+		return p.pos+1 if p is not None else 0
+	def findLineEnd(self,pos): 
+		p = self.findAnyNext(pos ,["\n","\r"])
+		return p.pos if p is not None else self.textLen()
+ 
+	def findAnyNext(self,start,strings,direction = 1):
+		if direction > 0:
+			text = self.textSubstr(start,self.textLen())
+		else:
+			text = self.textSubstr(0,start)
+		bestPos = bestStr = None
+		for stri in strings:
+			pos = text.find(stri) if direction > 0  else text.rfind(stri)
+			if pos != -1:
+				if not bestPos is not None or bestPos*direction > pos*direction:
+					bestPos = pos
+					bestStr = stri
+		if bestStr is not None:
+			return util.StrPos((bestPos + start if direction > 0 else bestPos),bestStr)
+		return None
 	def applyReplacements(self,replacements):
 		selections = []
 		offset = 0
 		for repl in replacements:
+			repl.withEditor(self)
 			repl.applyOffset(offset)
-			repl.applyToEditor(self)
+			repl.apply()
 			offset += repl.offsetAfter()
 			
 			selections += repl.selections

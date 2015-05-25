@@ -13,6 +13,16 @@ class BoxHelperTestCase(unittest.TestCase):
 		codewave.init()
 		self.codewave = codewave.Codewave(text_parser.TextParser('Lorem Ipsum'))
 		
+	def test_detect_depth(self):
+		text,sels = test_helper.extractSelections(textwrap.dedent("""\
+			Lorem ipsum dolor
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- ~  |Lorem ipsum dolor                     ~ -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			Lorem ipsum dolor"""))
+		self.codewave.editor.text = text
+		self.boxHelper = box_helper.BoxHelper(self.codewave.context)
+		self.assertEqual(self.boxHelper.getNestedLvl(sels[0].start),1)
 		
 	def test_detect_box_position(self):
 		text,sels = test_helper.extractSelections(textwrap.dedent("""\
@@ -23,6 +33,7 @@ class BoxHelperTestCase(unittest.TestCase):
 			Lorem ipsum dolor"""))
 		self.codewave.editor.text = text
 		self.boxHelper = box_helper.BoxHelper(self.codewave.context)
+		self.assertIsNotNone(self.boxHelper.getBoxForPos(sels[1]))
 		self.assertEqual(self.boxHelper.getBoxForPos(sels[1]).raw(), [sels[0].start,sels[2].start])
 		
 	def test_detect_box_position_when_nested(self):
@@ -36,6 +47,7 @@ class BoxHelperTestCase(unittest.TestCase):
 			Lorem ipsum dolor"""))
 		self.codewave.editor.text = text
 		self.boxHelper = box_helper.BoxHelper(self.codewave.context)
+		self.assertIsNotNone(self.boxHelper.getBoxForPos(sels[1]))
 		self.assertEqual(self.boxHelper.getBoxForPos(sels[1]).raw(), [sels[0].start,sels[2].start])
 		
 	def test_detect_box_width(self):

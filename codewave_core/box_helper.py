@@ -12,8 +12,8 @@ class BoxHelper():
 			'height': 3,
 			'openText': '',
 			'closeText': '',
-			'prefix': ''
-			'suffix': ''
+			'prefix': '',
+			'suffix': '',
 			'indent': 0
 		}
 		for key, val in self.defaults.items():
@@ -21,11 +21,11 @@ class BoxHelper():
 				setattr(self,key,options[key])
 			else:
 				setattr(self,key,val)
-	def clone(self,text):
+	def clone(self):
 		opt = {}
 		for key, val in self.defaults.items():
-				opt[key] = self[key]
-		return box_helper.BoxHelper(self.context,opt)
+				opt[key] = getattr(self,key)
+		return BoxHelper(self.context,opt)
 	def draw(self,text):
 		return self.startSep() + "\n" + self.lines(text) + "\n"+ self.endSep()
 	def wrapComment(self,str):
@@ -73,7 +73,7 @@ class BoxHelper():
 		if depth > 0:
 			left = self.left()
 			curLeft = util.repeat(left,depth-1)
-      
+			
 			clone = self.clone()
 			placeholder = "###PlaceHolder###"
 			clone.width = len(placeholder)
@@ -81,11 +81,11 @@ class BoxHelper():
 
 			startFind = re.compile(util.escapeRegExp(curLeft + clone.startSep()).replace(placeholder,'.*'))
 			endFind = re.compile(util.escapeRegExp(curLeft + clone.endSep()).replace(placeholder,'.*'))
-      
+			
 			pair = util.Pair(startFind,endFind,{
 				'validMatch': self.validPairMatch
 			})
-			res = pair.wrapperPos(pos,self.context.codewave.editor.text())
+			res = pair.wrapperPos(pos,self.context.codewave.editor.text)
 			if res is not None:
 				res.start += len(curLeft)
 				return res
@@ -98,10 +98,10 @@ class BoxHelper():
 	def getNestedLvl(self,index):
 		depth = 0
 		left = self.left()
-		while true:
-            f = self.context.codewave.findAnyNext(index ,[left,"\n","\r"],-1)
-            if f is None || f.str != left:
-                break
+		while True:
+			f = self.context.codewave.findAnyNext(index ,[left,"\n","\r"],-1)
+			if f is None or f.str != left:
+					break
 			index = f.pos
 			depth+=1
 		return depth

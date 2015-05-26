@@ -14,6 +14,12 @@ class CodewaveTestCase(unittest.TestCase):
 		codewave.init()
 		self.codewave = codewave.Codewave(text_parser.TextParser('Lorem Ipsum'))
 		
+	def assertRegex(self,text,reg, msg=None):
+		if hasattr(super(self.__class__, self),'assertRegex'):
+			super(self.__class__, self).assertRegex(text,reg,msg)
+		else:
+			super(self.__class__, self).assertRegexpMatches(text,reg,msg)
+		
 	def test_brakets(self):
 		self.assertEqual(self.codewave.brakets, '~~')
 		
@@ -156,6 +162,7 @@ class CodewaveTestCase(unittest.TestCase):
 			<!-- ~  adipiscing elit.                      ~ -->
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
 		self.codewave.onActivationKey()
+		
 		self.assertRegex(self.codewave.editor.text,
 			re.compile('^'+util.escapeRegExp( textwrap.dedent("""\
 				<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

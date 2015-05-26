@@ -51,7 +51,7 @@ def initCmds():
 		'comment': '/* ~~content~~ */',
 		'if':   'if(|){\n\t~~any_content~~\n}',
 		'info': 'phpinfo();',
-		'echo': 'echo ${id}',
+		'echo': 'echo |',
 		'e':{   'aliasOf': 'php:inner:echo' },
 		'class': {
 			'result' : textwrap.dedent("""

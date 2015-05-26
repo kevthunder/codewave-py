@@ -1,6 +1,6 @@
 import codewave_core.util as util
 
-class Editor():
+class Editor(object):
 	def __init__(self):
 		self.namespace = None
 		self._lang = None

@@ -168,6 +168,7 @@ class PositionedCmdInstance(cmd_instance.CmdInstance):
 		if self.isEmpty():
 			if self.codewave.closingPromp is not None and self.codewave.closingPromp.whithinOpenBounds(util.Pos(self.pos + len(self.codewave.brakets))) is not None:
 				self.codewave.closingPromp.cancel()
+				pass
 			else:
 				self.replaceWith('')
 		elif self.cmd is not None:

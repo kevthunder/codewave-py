@@ -86,6 +86,7 @@ class PhpTestCase(unittest.TestCase):
 		
 		text, sels = test_helper.extractSelections('~~|~~\nlorem ipsum\n~~/~~')
 		self.assertIsNotNone(self.codewave.commandOnPos(sels[0].start))
+		self.assertEqual(self.codewave.commandOnPos(sels[0].start).isEmpty(),True)
 		
 		self.codewave.onActivationKey()
 		test_helper.assertEditorResult(self,self.codewave.editor, '|[lorem ipsum]')

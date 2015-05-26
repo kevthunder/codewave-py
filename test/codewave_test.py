@@ -5,6 +5,7 @@ import re
 import codewave_core.util as util
 import codewave_core.codewave as codewave
 import codewave_core.text_parser as text_parser
+import test.test_editor as test_editor
 
 import test.test_helper as test_helper
 
@@ -80,6 +81,12 @@ class CodewaveTestCase(unittest.TestCase):
 		test_helper.setEditorContent(self.codewave.editor, '- ~~hello~~ ~~/hello|~~')
 		self.codewave.onActivationKey()
 		test_helper.assertEditorResult(self,self.codewave.editor, '- Hello, World!|')
+		
+	def test_expand_multi(self):
+		self.codewave = codewave.Codewave(test_editor.TestEditor('Lorem Ipsum'))
+		test_helper.setEditorContent(self.codewave.editor, '~~hello|~~ lorem ipsum ~~hello|~~')
+		self.codewave.onActivationKey()
+		test_helper.assertEditorResult(self,self.codewave.editor, 'Hello, World!| lorem ipsum Hello, World!|')
 		
 	def test_non_exiting_commands_should_not_change(self):
 		test_helper.setEditorContent(self.codewave.editor, '- ~~non_exiting_command|~~')

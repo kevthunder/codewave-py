@@ -83,7 +83,7 @@ class ClosingPromp():
 				if end is not None and start is not None:
 					replacements.append(util.Replacement(start.start,end.end,self.codewave.editor.textSubstr(start.end+1, end.start-1)).selectContent())
 					start = None
-		self.codewave.editor.applyReplacements(self.replacements)
+		self.codewave.editor.applyReplacements(replacements)
 	def typed(self):
 		if self._typed is None:
 			cpos = self.codewave.editor.getCursorPos()

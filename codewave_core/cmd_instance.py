@@ -10,10 +10,11 @@ class CmdInstance(object):
 	def __init__(self, cmd = None, context = None):
 		self.cmd,self.context = cmd,context
 		self.content = self.cmdObj = None
-		self.indentLen = self.cmd = self.aliasedCmd = self.aliasedFinalCmd = self.cmdOptions = None
+		self.inited = False
+		self.indentLen = self.aliasedCmd = self.aliasedFinalCmd = self.cmdOptions = None
 		
 	def init(self):
-		if not self.isEmpty() or self.inited:
+		if not self.isEmpty() and not self.inited:
 			self.inited = True
 			self._getCmdObj()
 			self._initParams()
@@ -43,7 +44,7 @@ class CmdInstance(object):
 	def _initParams(self):
 		self.named = self.getDefaults()
 	def _getParentNamespaces(self):
-		return array()
+		return []
 	def isEmpty(self):
 		return self.cmd is not None
 	def resultIsAvailable(self):

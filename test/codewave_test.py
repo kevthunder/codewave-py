@@ -1,11 +1,12 @@
 import unittest
 import textwrap
 import re
-import test.test_helper as test_helper
 
 import codewave_core.util as util
 import codewave_core.codewave as codewave
 import codewave_core.text_parser as text_parser
+
+import test.test_helper as test_helper
 
 class CodewaveTestCase(unittest.TestCase):
 	def setUp(self):
@@ -98,14 +99,14 @@ class CodewaveTestCase(unittest.TestCase):
 			<!-- ~   Lorem Ipsum ~~close~~   ~ -->
 			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->|"""))
 			
-	# def test__boxes_should_use_different_comment_style(self):
-		# self.codewave.editor.setLang('js')
-		# test_helper.setEditorContent(self.codewave.editor, '~~box|~~ Lorem Ipsum ~~close~~ ~~/box~~')
-		# self.codewave.onActivationKey()
-		# test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
-			# /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-			# /* ~   Lorem Ipsum ~~close~~   ~ */
-			# /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */|"""))
+	def test__boxes_should_use_different_comment_style(self):
+		self.codewave.editor.setLang('js')
+		test_helper.setEditorContent(self.codewave.editor, '~~box|~~ Lorem Ipsum ~~close~~ ~~/box~~')
+		self.codewave.onActivationKey()
+		test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
+			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+			/* ~   Lorem Ipsum ~~close~~   ~ */
+			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */|"""))
 		
 	def test_close_box(self):
 		self.codewave.editor.setLang('html')
@@ -157,74 +158,69 @@ class CodewaveTestCase(unittest.TestCase):
 				<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->""")
 			).replace('\\#\\#spaces\\#\\#','\\s*')+'$'))
 	
-	# def test_closed_nested_box_should_be_aligned(self):
-		# self.codewave.editor.setLang('html')
-		# test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			# <!-- ~  Lorem ipsum dolor                     ~ -->
-			# <!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
-			# <!-- ~  <!-- ~  sit amet, consectetur  ~ -->  ~ -->
-			# <!-- ~  <!-- ~  ~~close|~~              ~ -->  ~ -->
-			# <!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
-			# <!-- ~  adipiscing elit.                      ~ -->
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
-		# self.codewave.onActivationKey()
-		# matchExp = re.compile('^'+util.escapeRegExp( textwrap.dedent("""\
-				# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-				# <!-- ~  Lorem ipsum dolor                     ~ -->
-				# <!-- ~  ##spaces##  ~ -->
-				# <!-- ~  adipiscing elit.                      ~ -->
-				# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->""")
-			# ).replace('\\#\\#spaces\\#\\#','(\\s*)')+'$')
-		# self.assertRegex(self.codewave.editor.text, matchExp)
-		# match = re.search(matchExp,self.codewave.editor.text)
-		# self.assertEqual(len(match.group(1)), 36)
-		# test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			# <!-- ~  Lorem ipsum dolor                     ~ -->
-			# <!-- ~  |                                      ~ -->
-			# <!-- ~  adipiscing elit.                      ~ -->
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
+	def test_closed_nested_box_should_be_aligned(self):
+		self.codewave.editor.setLang('html')
+		test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- ~  Lorem ipsum dolor                     ~ -->
+			<!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
+			<!-- ~  <!-- ~  sit amet, consectetur  ~ -->  ~ -->
+			<!-- ~  <!-- ~  ~~close|~~              ~ -->  ~ -->
+			<!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
+			<!-- ~  adipiscing elit.                      ~ -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
+		self.codewave.onActivationKey()
+		matchExp = re.compile('^'+util.escapeRegExp( textwrap.dedent("""\
+				<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+				<!-- ~  Lorem ipsum dolor                     ~ -->
+				<!-- ~  ##spaces##  ~ -->
+				<!-- ~  adipiscing elit.                      ~ -->
+				<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->""")
+			).replace('\\#\\#spaces\\#\\#','(\\s*)')+'$')
+		self.assertRegex(self.codewave.editor.text, matchExp)
+		match = re.search(matchExp,self.codewave.editor.text)
+		self.assertEqual(len(match.group(1)), 36)
+		test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- ~  Lorem ipsum dolor                     ~ -->
+			<!-- ~  |                                      ~ -->
+			<!-- ~  adipiscing elit.                      ~ -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
 			 
-	# def test_close_parent_of_nested_box(self):
-		# self.codewave.editor.setLang('html')
-		# test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-			# <!-- ~  Lorem ipsum dolor                     ~ -->
-			# <!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
-			# <!-- ~  <!-- ~  sit amet, consectetur  ~ -->  ~ -->
-			# <!-- ~  <!-- ~  ~~close~~              ~ -->  ~ -->
-			# <!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
-			# <!-- ~  adipiscing elit.                      ~ -->
-			# <!-- ~  ~~close|~~                             ~ -->
-			# <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
-		# self.codewave.onActivationKey()
-		# test_helper.assertEditorResult(self,self.codewave.editor, '|')
+	def test_close_parent_of_nested_box(self):
+		self.codewave.editor.setLang('html')
+		test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- ~  Lorem ipsum dolor                     ~ -->
+			<!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
+			<!-- ~  <!-- ~  sit amet, consectetur  ~ -->  ~ -->
+			<!-- ~  <!-- ~  ~~close~~              ~ -->  ~ -->
+			<!-- ~  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  ~ -->
+			<!-- ~  adipiscing elit.                      ~ -->
+			<!-- ~  ~~close|~~                             ~ -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->"""))
+		self.codewave.onActivationKey()
+		test_helper.assertEditorResult(self,self.codewave.editor, '|')
 		
 		
-	# def test_follow_alias_with_name_wildcard(self):
-		# self.codewave.editor.setLang('html')
-		# test_helper.setEditorContent(self.codewave.editor, '~~php:outer:f|~~')
-		# self.codewave.onActivationKey()
-		# test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
-				# <?php
-					# function |() {
-						
-					# }
-				# ?>"""))
+	def test_follow_alias_with_name_wildcard(self):
+		self.codewave.editor.setLang('html')
+		test_helper.setEditorContent(self.codewave.editor, '~~php:outer:f|~~')
+		self.codewave.onActivationKey()
+		test_helper.assertEditorResult(self,self.codewave.editor, '<?php\n  function |() {\n    \n  }\n?>')
 		
 	
-	# def test_replace_box(self):
-		# self.codewave.editor.setLang('js')
-		# test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
-			# /* ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-			# /* ~  ~~test:replace_box|~~  ~ */
-			# /* ~~~~~~~~~~~~~~~~~~~~~~~~~~ */"""))
-		# self.codewave.onActivationKey()
-		# test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
-			# /* ~~~~~~~~~~~~~~~~~ */
-			# /* ~  Lorem ipsum  ~ */
-			# /* ~~~~~~~~~~~~~~~~~ */|"""))
+	def test_replace_box(self):
+		self.codewave.editor.setLang('js')
+		test_helper.setEditorContent(self.codewave.editor, textwrap.dedent("""\
+			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+			/* ~  ~~test:replace_box|~~  ~ */
+			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~ */"""))
+		self.codewave.onActivationKey()
+		test_helper.assertEditorResult(self,self.codewave.editor, textwrap.dedent("""\
+			/* ~~~~~~~~~~~~~~~~~ */
+			/* ~  Lorem ipsum  ~ */
+			/* ~~~~~~~~~~~~~~~~~ */|"""))
 			
   # def test_emmet(self):
     # self.codewave.editor.setLang('html')

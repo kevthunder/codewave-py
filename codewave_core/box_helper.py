@@ -78,14 +78,18 @@ class BoxHelper():
 			placeholder = "###PlaceHolder###"
 			clone.width = len(placeholder)
 			clone.openText = clone.closeText = self.deco + self.deco + placeholder + self.deco + self.deco
-
-			startFind = re.compile(util.escapeRegExp(curLeft + clone.startSep()).replace(placeholder,'.*'))
-			endFind = re.compile(util.escapeRegExp(curLeft + clone.endSep()).replace(placeholder,'.*'))
+			escPlaceholder = util.escapeRegExp("###PlaceHolder###")
+			
+			
+			startFind = re.compile(util.escapeRegExp(curLeft + clone.startSep()).replace(escPlaceholder,'.*'))
+			endFind = re.compile(util.escapeRegExp(curLeft + clone.endSep()).replace(escPlaceholder,'.*'))
+			
 			
 			pair = util.Pair(startFind,endFind,{
 				'validMatch': self.validPairMatch
 			})
 			res = pair.wrapperPos(pos,self.context.codewave.editor.text)
+			
 			if res is not None:
 				res.start += len(curLeft)
 				return res

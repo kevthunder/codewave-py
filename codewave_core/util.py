@@ -32,7 +32,7 @@ class Pos(object):
 	def hasEditor(self):
 		return self._editor is not None
 	def text(self):
-		self.editor().textSubstr(self.start, self.end)
+		return self.editor().textSubstr(self.start, self.end)
 	def applyOffset(self,offset):
 		if offset != 0:
 			self.start += offset
@@ -69,11 +69,12 @@ class Pos(object):
 class WrappedPos(Pos):
 	def __init__(self, start,innerStart,innerEnd,end):
 		self.start,self.innerStart,self.innerEnd,self.end = start,innerStart,innerEnd,end
+		self.initVars()
 	def innerContainsPt(self,pt):
 		return self.innerStart <= pt and pt <= self.innerEnd
 	def innerContainsPos(self,pos):
 		return self.innerStart <= pos.start and pos.end <= self.innerEnd
-	def innerTextFromEditor(self):
+	def innerText(self):
 		return self.editor().textSubstr(self.innerStart, self.innerEnd)
 	def setInnerLen(self,len):
 		self.moveSufix(self.innerStart + len)
@@ -220,7 +221,7 @@ class PairMatch():
 	def valid(self):
 		return not self.pair.validMatch or self.pair.validMatch(self)
 	def length(self):
-		return len(self.group(0))
+		return len(self.match.group(0))
 		
 class Pair():
 	def __init__(self, opener,closer,options = {}):
@@ -286,7 +287,7 @@ class Pair():
 				res = match
 		return res
 	def identical(self):
-		self.opener == self.closer
+		return self.opener == self.closer
 	def wrapperPos(self,pos,text):
 		start = self.matchAnyLast(text[0:pos.start])
 		if start is not None and (self.identical() or start.name() == 'opener'):

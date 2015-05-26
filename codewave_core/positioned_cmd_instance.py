@@ -166,7 +166,7 @@ class PositionedCmdInstance(cmd_instance.CmdInstance):
 		return self.str == self.codewave.brakets + self.codewave.closeChar + self.codewave.brakets or self.str == self.codewave.brakets + self.codewave.brakets
 	def execute(self):
 		if self.isEmpty():
-			if self.codewave.closingPromp is not None and self.codewave.closingPromp.whithinOpenBounds(self.pos + len(self.codewave.brakets)) is not None:
+			if self.codewave.closingPromp is not None and self.codewave.closingPromp.whithinOpenBounds(util.Pos(self.pos + len(self.codewave.brakets))) is not None:
 				self.codewave.closingPromp.cancel()
 			else:
 				self.replaceWith('')

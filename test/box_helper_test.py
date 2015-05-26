@@ -1,12 +1,13 @@
 import unittest
 import textwrap
 import re
-import test.test_helper as test_helper
 
 import codewave_core.util as util
 import codewave_core.codewave as codewave
 import codewave_core.text_parser as text_parser
 import codewave_core.box_helper as box_helper
+
+import test.test_helper as test_helper
 
 class BoxHelperTestCase(unittest.TestCase):
 	def setUp(self):
@@ -55,12 +56,11 @@ class BoxHelperTestCase(unittest.TestCase):
 		self.boxHelper.getOptFromLine('<!-- ~  123456789  ~ -->',False)
 		self.assertEqual(self.boxHelper.width, 9)
 		
-	# def test_detect_nested_box_outer_width(self):
-		# self.boxHelper = box_helper.BoxHelper(self.codewave.context)
-		# self.boxHelper.getOptFromLine('<!-- ~  <!-- ~  123456789  ~ -->  ~ -->',False)
-		# self.assertEqual(self.boxHelper.width, 24)
+	def test_detect_nested_box_outer_width(self):
+		self.boxHelper = box_helper.BoxHelper(self.codewave.context)
+		self.boxHelper.getOptFromLine('<!-- ~  <!-- ~  123456789  ~ -->  ~ -->',False)
+		self.assertEqual(self.boxHelper.width, 24)
 		
-
 		
 if __name__ == '__main__':
 		unittest.main()

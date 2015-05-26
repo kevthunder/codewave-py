@@ -1,4 +1,6 @@
 import re
+import textwrap
+import codewave_core.command as command
 import codewave_core.util as util
 
 def assertEditorResult(test_case,editor,res):
@@ -33,3 +35,16 @@ def extractSelections(text):
 		else:
 			break
 	return [finalText,sels]
+
+	
+
+def initCmds():
+	test = command.cmds.addCmd(command.Command('test'))
+	test.addCmds({
+		'replace_box': {
+			'replaceBox' : True,
+			'result' : '~~box~~Lorem ipsum~~/box~~'
+		}
+	})
+	
+command.cmdInitialisers.add(initCmds)
